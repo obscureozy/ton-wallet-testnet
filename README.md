@@ -1,6 +1,6 @@
 # TON Wallet Testnet
 
-A simple script to send TON coins on the testnet.
+Bunch of simple scripts to create a wallet, check the wallend and send TON coins on the testnet.
 
 ## Security Notice
 
