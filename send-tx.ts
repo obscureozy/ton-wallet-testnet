@@ -18,9 +18,9 @@ const { Cell, Address, beginCell } = pkg;
 dotenv.config();
 
 // Validate required environment variables
-const mnemonic = process.env.MNEMONIC;
-const recipientAddress = process.env.RECIPIENT_ADDRESS;
-const amount = process.env.AMOUNT;
+const mnemonic = process.env.MNEMONIC ?? '';
+const recipientAddress = process.env.RECIPIENT_ADDRESS ?? '';
+const amount = process.env.AMOUNT ?? '';
 
 if (!mnemonic) {
     throw new Error("MNEMONIC is not set in .env file");
@@ -31,11 +31,6 @@ if (!recipientAddress) {
 if (!amount) {
     throw new Error("AMOUNT is not set in .env file");
 }
-
-// Type assertions after validation
-const validatedMnemonic = mnemonic as string;
-const validatedRecipientAddress = recipientAddress as string;
-const validatedAmount = amount as string;
 
 /**
  * Utility function to pause execution for a specified time
@@ -54,7 +49,7 @@ function sleep(ms: number) {
  */
 async function main() {
     // Generate wallet key pair from mnemonic
-    const key = await mnemonicToWalletKey(validatedMnemonic.split(" "));
+    const key = await mnemonicToWalletKey(mnemonic.split(" "));
     
     // Create wallet contract instance
     const wallet = WalletContractV4.create({
@@ -80,7 +75,7 @@ async function main() {
     const messageBody = beginCell().endCell();
 
     // Display transaction details
-    console.log(`Sending ${validatedAmount} TON to ${validatedRecipientAddress}...`);
+    console.log(`Sending ${amount} TON to ${recipientAddress}...`);
     
     // Send the transfer transaction
     await walletContract.sendTransfer({
@@ -90,8 +85,8 @@ async function main() {
             {
                 info: {
                     type: 'internal',
-                    dest: Address.parse(validatedRecipientAddress),
-                    value: { coins: toNano(validatedAmount) },
+                    dest: Address.parse(recipientAddress),
+                    value: { coins: toNano(amount) },
                     bounce: false,
                     ihrDisabled: true,
                     bounced: false,

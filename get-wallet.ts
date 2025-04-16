@@ -14,15 +14,10 @@ import * as dotenv from 'dotenv';
 // Load environment variables from .env file
 dotenv.config();
 
-// Validate required environment variables
-const mnemonic = process.env.MNEMONIC;
-
+const mnemonic = process.env.MNEMONIC ?? '';
 if (!mnemonic) {
     throw new Error("MNEMONIC is not set in .env file");
 }
-
-// Type assertion after validation
-const validatedMnemonic = mnemonic as string;
 
 /**
  * Main function that:
@@ -33,7 +28,7 @@ const validatedMnemonic = mnemonic as string;
  */
 async function main() {
     // Generate wallet key pair from mnemonic
-    const key = await mnemonicToWalletKey(validatedMnemonic.split(" "));
+    const key = await mnemonicToWalletKey(mnemonic.split(" "));
     
     // Create wallet contract instance
     const wallet = WalletContractV4.create({
